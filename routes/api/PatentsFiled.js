@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {
     HandlePatentsFiled, 
-    GetAllPatentsFiled
+    GetAllPatentsFiled,
+    DeletePatent
 } = require('../../controllers/application/PatentsFiled');
 
 router.post('/addpatent',HandlePatentsFiled);
