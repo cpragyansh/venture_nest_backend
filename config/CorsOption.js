@@ -1,0 +1,31 @@
+const AlowedOrigan = require('./AllowedOrigan')
+class CorsHandler {
+    constructor(allowedOrigins) {
+        this.allowedOrigins = allowedOrigins;
+    }
+
+    validateOrigin(origin, callback) {
+        // Check if the origin is allowed or it's a server-side request with no origin
+        if (this.allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);  // Origin allowed
+        } else {
+            callback(new Error('Not allowed by CORS'));  // Origin not allowed
+        }
+    }
+
+    getCorsOptions() {
+        return {
+            origin: (origin, callback) => {
+                this.validateOrigin(origin, callback);
+            },
+            optionsSuccessStatus: 200
+        };
+    }
+}
+
+// Usage
+
+const corsHandler = new CorsHandler(AlowedOrigan);
+const corsOptions = corsHandler.getCorsOptions();
+
+module.exports = corsOptions;
