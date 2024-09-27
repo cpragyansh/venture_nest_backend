@@ -59,19 +59,19 @@ const GetAllPatentsFiled = async (req, res) => {
         return res.status(500).send('Error fetching patents.');
     }
 };
-
 const DeletePatent = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { PatentTitle, ApplicationNo } = req.body;
 
-        // Check if the patent exists
-        const patent = await PatentsFiled.findById(id);
+        // Find the patent by provided details
+        const patent = await PatentsFiled.findOneAndDelete({
+            PatentTitle,
+            ApplicationNo,
+        });
+
         if (!patent) {
             return res.status(404).send('Patent not found.');
         }
-
-        // Delete the patent
-        await PatentsFiled.findByIdAndDelete(id);
 
         // Log success and send a success response
         console.log('Patent deleted:', patent);
@@ -85,6 +85,6 @@ const DeletePatent = async (req, res) => {
 
 module.exports = {
     HandlePatentsFiled, // Corrected export for this function
-    GetAllPatentsFiled , // Corrected export for this function
+    GetAllPatentsFiled,  // Corrected export for this function
     DeletePatent
 };

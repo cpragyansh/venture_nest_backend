@@ -1062,3 +1062,8 @@
 20240927	12:07:15	b2f69df0-d0fb-47ce-9b76-8f9f34f88e5a	GET	http://localhost:3001	/images
 20240927	12:07:25	a5fd57dd-a67f-4c76-b84e-6af0e48326b9	GET	http://localhost:3001	/getstartup
 20240927	12:07:25	9c749a80-2713-4b58-bdaf-400093d2ec68	GET	http://localhost:3001	/getstartup
+20240927	15:20:49	f0639a5b-fa5f-40ae-b658-c4f44fbe8f35	GET	undefined	/removepatents
+20240927	15:20:54	1fa51b46-1759-49b4-8c7f-693a5b537aca	POST	undefined	/removepatents
+20240927	15:20:59	08477124-d31b-445b-bd4d-cabce81b0fc7	DELETE	undefined	/removepatents
+20240927	15:22:00	005b22ea-d97e-4220-8129-1dc18b4cb83d	DELETE	undefined	/removepatents
+20240927	15:24:27	76e64288-0550-4eec-8fcf-e6e365a231d5	DELETE	undefined	/removepatents
