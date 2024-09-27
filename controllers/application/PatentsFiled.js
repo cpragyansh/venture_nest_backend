@@ -60,7 +60,31 @@ const GetAllPatentsFiled = async (req, res) => {
     }
 };
 
+const DeletePatent = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if the patent exists
+        const patent = await PatentsFiled.findById(id);
+        if (!patent) {
+            return res.status(404).send('Patent not found.');
+        }
+
+        // Delete the patent
+        await PatentsFiled.findByIdAndDelete(id);
+
+        // Log success and send a success response
+        console.log('Patent deleted:', patent);
+        return res.status(200).send('Patent deleted successfully.');
+    } catch (err) {
+        // Handle errors
+        console.error('Error deleting patent:', err);
+        return res.status(500).send('Error deleting patent.');
+    }
+};
+
 module.exports = {
     HandlePatentsFiled, // Corrected export for this function
-    GetAllPatentsFiled  // Corrected export for this function
+    GetAllPatentsFiled , // Corrected export for this function
+    DeletePatent
 };
