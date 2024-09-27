@@ -1058,3 +1058,7 @@
 20240927	11:27:15	013f8940-d213-4a89-8abc-b21e9f694b2d	GET	http://localhost:3001	/photos
 20240927	11:30:30	a0073353-05c9-4c23-b21c-c44ba4c9bb31	GET	http://localhost:3001	/images
 20240927	11:30:30	eea4c28e-83d1-41dd-826e-e883cf6c7f7e	GET	http://localhost:3001	/images
+20240927	12:07:12	63083a02-ebd4-41e0-ab15-ed70b8efc852	GET	http://localhost:3001	/images
+20240927	12:07:15	b2f69df0-d0fb-47ce-9b76-8f9f34f88e5a	GET	http://localhost:3001	/images
+20240927	12:07:25	a5fd57dd-a67f-4c76-b84e-6af0e48326b9	GET	http://localhost:3001	/getstartup
+20240927	12:07:25	9c749a80-2713-4b58-bdaf-400093d2ec68	GET	http://localhost:3001	/getstartup
