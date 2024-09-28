@@ -118,8 +118,39 @@ const HeroSectionGetImg = async (req, res) => {
     }
 };
 
+// Function to delete an image from HeroSection
+const HeroSectionDeleteImg = async (req, res) => {
+    const { imageUrl } = req.body; // Get the URL of the image to delete
+
+    try {
+        // Find the HeroSection document
+        const heroSection = await HeroSection.findOne();
+
+        if (!heroSection) {
+            return res.status(404).json({ message: 'HeroSection not found.' });
+        }
+
+        // Remove the image from the relevant array (mobile, tablet, laptop, desktop)
+        heroSection.mobile = heroSection.mobile.filter(img => img.path !== imageUrl);
+        heroSection.tablet = heroSection.tablet.filter(img => img.path !== imageUrl);
+        heroSection.laptop = heroSection.laptop.filter(img => img.path !== imageUrl);
+        heroSection.desktop = heroSection.desktop.filter(img => img.path !== imageUrl);
+
+        // Save the updated document
+        await heroSection.save();
+
+        res.status(200).json({ message: 'Image deleted successfully.' });
+    } catch (err) {
+        console.error('Error deleting image:', err);
+        res.status(500).json({ message: 'Error deleting image', error: err });
+    }
+};
+
+
 module.exports = {
     HeroSectionImgUpload,
     HeroSectionGetImg,
-    upload // Export the multer upload middleware to be used in the router
+    upload,
+    HeroSectionDeleteImg
+     // Export the multer upload middleware to be used in the router
 };

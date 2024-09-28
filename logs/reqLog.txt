@@ -1067,3 +1067,10 @@
 20240927	15:20:59	08477124-d31b-445b-bd4d-cabce81b0fc7	DELETE	undefined	/removepatents
 20240927	15:22:00	005b22ea-d97e-4220-8129-1dc18b4cb83d	DELETE	undefined	/removepatents
 20240927	15:24:27	76e64288-0550-4eec-8fcf-e6e365a231d5	DELETE	undefined	/removepatents
+20240927	15:43:48	695e2408-805e-4d7a-b996-f4b73ffc52d4	DELETE	undefined	/removepatents
+20240927	15:44:07	da6d2d32-37e4-4416-a5b7-fc2403828de3	DELETE	undefined	/delete
+20240927	15:52:33	58dcacee-be8d-4a83-a913-96dd46df50f5	DELETE	undefined	/delete
+20240929	00:24:46	2e98d66c-ef1a-44b6-a3c2-3eee8a4dc64c	DELETE	undefined	/upload
+20240929	00:24:54	93bdb417-0727-4dce-878f-a7a0bdbb4685	POST	undefined	/upload
+20240929	00:25:13	dbeda925-ca6c-436a-9d95-ca22ad1a5099	POST	undefined	/upload
+20240929	00:25:25	0ebf1d49-35ee-4d78-a085-526678dd4661	POST	undefined	/upload
