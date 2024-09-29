@@ -1075,3 +1075,5 @@
 20240929	00:25:13	dbeda925-ca6c-436a-9d95-ca22ad1a5099	POST	undefined	/upload
 20240929	00:25:25	0ebf1d49-35ee-4d78-a085-526678dd4661	POST	undefined	/upload
 20240929	16:08:39	d7edec82-2210-4268-82d0-656296ae6e40	GET	undefined	/latestnews
+20240929	16:36:26	b1cf4fa4-4e0d-4d25-9ffd-1ce9d1114ff0	POST	http://localhost:3000	/addLatestNews
+20240929	16:37:46	21c2a0e5-5de7-48c2-9437-4c9ed659f10a	POST	http://localhost:3000	/addLatestNews
