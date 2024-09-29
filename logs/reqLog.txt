@@ -1077,3 +1077,15 @@
 20240929	16:08:39	d7edec82-2210-4268-82d0-656296ae6e40	GET	undefined	/latestnews
 20240929	16:36:26	b1cf4fa4-4e0d-4d25-9ffd-1ce9d1114ff0	POST	http://localhost:3000	/addLatestNews
 20240929	16:37:46	21c2a0e5-5de7-48c2-9437-4c9ed659f10a	POST	http://localhost:3000	/addLatestNews
+20240929	22:06:05	48946071-ef46-4348-9945-6f05e4656d53	GET	undefined	/markStarredStory
+20240929	22:06:25	1dea75f8-0d80-4234-9395-0010d4633613	POST	undefined	/markStarredStory
+20240929	22:07:53	637575bc-38b5-4e9c-83d2-1b4cd4db412e	POST	undefined	/markStarredStory
+20240929	22:09:57	58dbea68-b824-48a1-a717-0e8c3e4a3368	POST	undefined	/markStarredStory
+20240929	22:16:46	05506398-9b94-4754-9a7b-5897a649ead6	POST	undefined	/markStarredStory
+20240929	22:18:10	979671ff-64b1-4a5d-a336-335b862cd17e	GET	undefined	//starred-stories
+20240929	22:18:19	3435835b-5a8e-44a3-ab12-95f511adaee1	GET	undefined	/starred-stories
+20240929	22:25:02	5626080d-73f1-4007-abca-9f4797bd3b46	GET	undefined	/starred-stories
+20240929	22:28:19	7a05dc9f-8072-4e54-baaa-20e09576aef7	GET	undefined	/starred-stories
+20240929	22:29:28	6757c5ee-46d9-4a4d-9d7e-43b098f7c02c	GET	undefined	/starred-stories
+20240929	22:29:47	3f959e5e-3abf-465f-a38a-87160c39b568	GET	undefined	/success-mark-starred
+20240929	22:29:52	83067606-32a4-431f-85bf-26412129a268	POST	undefined	/success-mark-starred

@@ -23,7 +23,7 @@ const FounderDetUpload = async (req, res) => {
         if (!req.body.StartupName || !req.body.StartupAbout || !req.file) {
             return res.status(400).send('Startup Name, About, and Founder Image are all required.');
         }
-const result = await cloudinary.uploader.upload(req.file.path)
+        const result = await cloudinary.uploader.upload(req.file.path)
 
         // Create a new SuccessStories document with the uploaded data
         const newStory = new SuccessStories({
@@ -31,7 +31,7 @@ const result = await cloudinary.uploader.upload(req.file.path)
             StartupAbout: req.body.StartupAbout,
             FounderImg: result.secure_url, // Save the image path
             FounderImgName: req.file.filename
-             // Save the image filename
+            // Save the image filename
         });
 
         // Save the new document to MongoDB
@@ -75,7 +75,7 @@ const FounderImgGet = async (req, res) => {
         }
 
         console.log(`Found ${data.length} success stories entries.`);
-        
+
         // Send the data as JSON response
         res.status(200).json(data);
     } catch (err) {
@@ -84,9 +84,49 @@ const FounderImgGet = async (req, res) => {
     }
 };
 
+const markStarredStory = async (req, res) => {
+    try {
+
+        const { storyId, isStarred } = req.body;
+        const story = await SuccessStories.findById(storyId);
+
+        if (!story) {
+            return res.status(404).json({ message: 'Story Not Found' })
+        }
+
+        //update the isStarred field
+        story.isStarred = isStarred;
+        await story.save();
+        res.status(200).json({ message: 'Story updated successfully', story });
+
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).json({ message: 'Error updating story', error: error });
+    }
+};
+
+const StarredStory = async (req, res) => {
+    try {
+
+        const stories = await SuccessStories.find({ isStarred: true });
+
+        if (stories.length === 0 ) {
+            return res.status(404).json({ message: 'starred Story Not Found' })
+        }
+
+        res.status(200).json(stories);
+       
+
+    } catch (error) {
+        console.error('Error retrieving starred stories:', error);
+        res.status(500).json({ message: 'Error retrieving starred stories', error: error });
+    }
+}
 module.exports = {
     FounderDetUpload,
     FounderImgGet,
     FounderImgGetfromserver,
+    StarredStory,
+    markStarredStory,
     upload // Export multer middleware for handling uploads
 };

@@ -4,7 +4,9 @@ const {
     FounderDetUpload,
     FounderImgGetfromserver,
     FounderImgGet,
-    upload
+    upload,
+    markStarredStory,
+    StarredStory
 } = require('../../controllers/application/SuccessStories');
 
 // POST request to upload founder's image, startup name, and startup description
@@ -15,5 +17,10 @@ router.get('/successstory/:filename', FounderImgGetfromserver);
 
 // GET request to retrieve all success stories from the database
 router.get('/getsuccess', FounderImgGet);
+
+router.post('/success-mark-starred' , markStarredStory);
+router.get('/starred-stories' , StarredStory);
+
+
 
 module.exports = router;
