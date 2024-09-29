@@ -58,6 +58,7 @@ app.use('/', require('./routes/api/IncubatedStartup'));
 app.use('/', require('./routes/api/PatentsFiled'));
 app.use('/', require('./routes/api/Event'));
 app.use('/', require('./routes/api/photo'));
+app.use('/', require('./routes/api/Latestnews'));
 
 
 
