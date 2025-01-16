@@ -8,6 +8,7 @@ class CorsHandler {
 
     validateOrigin(origin, callback) {
         // Check if the origin is allowed or it's a server-side request with no origin
+        console.log('Origin:', origin); // Log the origin to check
         if (this.allowedOrigins.indexOf(origin) !== -1 || !origin) {
             callback(null, true);  // Origin allowed
         } else {
