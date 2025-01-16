@@ -1,4 +1,4 @@
-const AllowedOrigins = require('../config/AllowedOrigan').default;
+const AllowedOrigins = require('../config/AllowedOrigan');
 
 class CorsCredentialsHandler {
     constructor(allowedOrigins) {

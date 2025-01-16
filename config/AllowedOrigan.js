@@ -6,4 +6,4 @@ const allowedOrigins = [
     'https://venturenest-a9a81.firebaseapp.com/', // Production domain
 ];
 
-export default allowedOrigins;
+module.exports = allowedOrigins;
