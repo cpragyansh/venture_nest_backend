@@ -1089,3 +1089,4 @@
 20240929	22:29:28	6757c5ee-46d9-4a4d-9d7e-43b098f7c02c	GET	undefined	/starred-stories
 20240929	22:29:47	3f959e5e-3abf-465f-a38a-87160c39b568	GET	undefined	/success-mark-starred
 20240929	22:29:52	83067606-32a4-431f-85bf-26412129a268	POST	undefined	/success-mark-starred
+20240930	10:57:51	90de0ee7-8bad-45b5-8e35-e333d5e78d05	POST	undefined	/removestartup

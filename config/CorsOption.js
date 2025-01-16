@@ -1,4 +1,6 @@
-const AlowedOrigan = require('./AllowedOrigan')
+// CorsOption.js
+const AllowedOrigan = require('./AllowedOrigan'); // Import allowed origins
+
 class CorsHandler {
     constructor(allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
@@ -24,8 +26,7 @@ class CorsHandler {
 }
 
 // Usage
-
-const corsHandler = new CorsHandler(AlowedOrigan);
+const corsHandler = new CorsHandler(AllowedOrigan);
 const corsOptions = corsHandler.getCorsOptions();
 
 module.exports = corsOptions;
