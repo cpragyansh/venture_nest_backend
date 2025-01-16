@@ -1,4 +1,3 @@
-// CorsOption.js
 const AllowedOrigan = require('./AllowedOrigan'); // Import allowed origins
 
 class CorsHandler {
@@ -7,12 +6,16 @@ class CorsHandler {
     }
 
     validateOrigin(origin, callback) {
-        // Check if the origin is allowed or it's a server-side request with no origin
-        console.log('Origin:', origin); // Log the origin to check
-        if (this.allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);  // Origin allowed
+        console.log('Incoming Origin:', origin || 'No Origin'); // Log incoming origin
+        if (!origin) {
+            console.log('Request has no origin, allowing.');
+            callback(null, true); // Allow server-side requests
+        } else if (this.allowedOrigins.indexOf(origin) !== -1) {
+            console.log(`Origin ${origin} is allowed.`);
+            callback(null, true); // Allow listed origins
         } else {
-            callback(new Error('Not allowed by CORS'));  // Origin not allowed
+            console.log(`Origin ${origin} is not allowed.`);
+            callback(new Error('Not allowed by CORS'));
         }
     }
 
@@ -21,7 +24,7 @@ class CorsHandler {
             origin: (origin, callback) => {
                 this.validateOrigin(origin, callback);
             },
-            optionsSuccessStatus: 200
+            optionsSuccessStatus: 204, // Use 204 for better compatibility
         };
     }
 }
