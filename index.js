@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const corsOptions = require('./config/CorsOption');
+const corsOptions = require('./config/CorsOption').default;
 const credentialsMiddleware = require('./middleware/credentials');
 const dbconnect = require('./config/dbConnect');
 const ErrorHandler = require('./middleware/ErrorHandle');
