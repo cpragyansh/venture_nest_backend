@@ -60,6 +60,9 @@ app.use('/', require('./routes/api/Event'));
 app.use('/', require('./routes/api/photo'));
 app.use('/', require('./routes/api/Latestnews'));
 
+app.get("/api/health", (req, res) => {
+    res.json({ status: "Server is running", timestamp: new Date() });
+});
 
 
 // auth 
