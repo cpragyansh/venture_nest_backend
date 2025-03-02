@@ -22,9 +22,14 @@ const app = express();
 
 // Use credentials middleware before CORS
 app.use(credentialsMiddleware);
+app.use(cors(corsOptions));
+app.post('/api/partners/add', (req, res) => {
+    res.json({ message: "Test route is working!" });
+});
+
 
 // Use CORS with the specified options
-app.use(cors(corsOptions));
+// app.use(cors());
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -59,6 +64,8 @@ app.use('/', require('./routes/api/PatentsFiled'));
 app.use('/', require('./routes/api/Event'));
 app.use('/', require('./routes/api/photo'));
 app.use('/', require('./routes/api/Latestnews'));
+app.use('/', require('./routes/api/gov_partners'));
+app.use('/', require('./routes/api/councilRoutes'));
 
 app.get("/api/health", (req, res) => {
     res.json({ status: "Server is running", timestamp: new Date() });

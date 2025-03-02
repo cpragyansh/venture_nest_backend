@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { OurPartnersImgUpload, OurPartnersGetImg, OurPartnersImgGet, upload } = require('../../controllers/application/OurPartners');
+const { OurPartnersImgUpload, OurPartnersGetImg, OurPartnersImgGet,upload } = require('../../controllers/application/OurPartners');
 
 // POST request to upload partner's name and image
 router.post('/ourpartner', upload.single('image'), OurPartnersImgUpload);
@@ -10,6 +10,6 @@ router.post('/ourpartner', upload.single('image'), OurPartnersImgUpload);
 router.get('/getpartner', OurPartnersGetImg);
 
 // GET request to serve a specific partner image by filename
-router.get('/ourpartner/:filename', OurPartnersImgGet);
+// router.get('/ourpartner/:filename', OurPartnersImgGet);
 
 module.exports = router;

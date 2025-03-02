@@ -1,99 +1,98 @@
 const OurPartners = require('../../models/OurPartners'); // Adjust the path
+const cloudinary = require('../../config/cloudinary'); // Cloudinary config
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const streamifier = require('streamifier');
 
-// Allowed categories
-const allowedCategories = ['government', 'ecosystem', 'investor', 'mentor'];
+// ✅ Add new category 'accelerator'
+const allowedCategories = ['government', 'ecosystem', 'investor', 'mentor', 'accelerator'];
 
-// Multer storage configuration
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/OurPartners/'); // relative path for OurPartners uploads
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-});
+// Multer configuration (store file in memory)
+const upload = multer({ storage: multer.memoryStorage() });
 
-const upload = multer({ storage: storage });
-
-// Function to handle image and name upload for OurPartners and save to the database
-const OurPartnersImgUpload = async (req, res) => {
-    try {
-        const { name, category } = req.body;
-
-        // Validate if name, category, and image are provided
-        if (!name || !category || !req.file) {
-            return res.status(400).send('Name, Category, and Image are required.');
-        }
-
-        // Validate the category against allowed categories
-        if (!allowedCategories.includes(category)) {
-            return res.status(400).send(`Invalid category. Allowed categories are: ${allowedCategories.join(', ')}`);
-        }
-
-        // Create a new OurPartners document with the uploaded data
-        const newPartner = new OurPartners({
-            Name: name,
-            imgpath: req.file.path, // Save the image path
-            imgName: req.file.filename,
-            Category: category // Save the category
-        });
-
-        // Save the new document to MongoDB
-        await newPartner.save();
-
-        console.log('New partner saved:', newPartner);
-        res.status(200).send('Partner saved successfully!');
-    } catch (err) {
-        console.error('Error saving partner:', err);
-        res.status(500).send('Error saving partner: ' + err);
-    }
-};
-
-// Function to get an image by filename from the 'uploads' folder
-const OurPartnersImgGet = (req, res) => {
-    const filePath = path.join(__dirname, '../../uploads/OurPartners', req.params.filename); // Adjust path
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-        if (err) {
-            return res.status(404).send('File not found');
-        }
-
-        const ext = path.extname(filePath).toLowerCase();
-        let contentType = 'image/jpeg'; // Default to jpeg
-
-        if (ext === '.png') contentType = 'image/png';
-        if (ext === '.jpg') contentType = 'image/jpg';
-
-        res.setHeader('Content-Type', contentType);
-        fs.createReadStream(filePath).pipe(res); // Stream the image
+// Function to upload image to Cloudinary and return the secure URL
+const uploadToCloudinary = (fileBuffer) => {
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { folder: 'OurPartners' }, // Save in Cloudinary folder
+            (error, result) => {
+                if (error) {
+                    console.error("Cloudinary Upload Error:", error);
+                    reject(error);
+                } else {
+                    resolve(result);
+                }
+            }
+        );
+        streamifier.createReadStream(fileBuffer).pipe(uploadStream);
     });
 };
 
-// Function to get all OurPartners images and names from the database
+// Function to handle partner image upload and save it to MongoDB
+const OurPartnersImgUpload = async (req, res) => {
+    try {
+        let { name, category } = req.body;
+
+        // ✅ Convert name to string if it's an array
+        if (Array.isArray(name)) {
+            name = name.join(", "); // Convert array to comma-separated string
+        }
+
+        // Validate required fields
+        if (!name || !category || !req.file) {
+            return res.status(400).json({ message: 'Name, Category, and Image are required.' });
+        }
+
+        // Validate category
+        if (!allowedCategories.includes(category)) {
+            return res.status(400).json({ message: `Invalid category. Allowed categories are: ${allowedCategories.join(', ')}` });
+        }
+
+        // Upload image to Cloudinary and get the URL
+        const cloudinaryResult = await uploadToCloudinary(req.file.buffer);
+
+        // Save the Cloudinary image URL to MongoDB
+        const newPartner = new OurPartners({
+            Name: name,  // ✅ Now always a string
+            imgpath: cloudinaryResult.secure_url, // Save Cloudinary URL
+            imgName: cloudinaryResult.public_id, // Save Cloudinary public ID
+            Category: category
+        });
+
+        await newPartner.save();
+        console.log('New partner saved:', newPartner);
+
+        res.status(200).json({
+            message: 'Partner saved successfully!',
+            partner: newPartner
+        });
+    } catch (err) {
+        console.error('Error saving partner:', err);
+        res.status(500).json({ message: 'Error saving partner', error: err.message });
+    }
+};
+
+
+// Function to get all partners (with optional category filter)
 const OurPartnersGetImg = async (req, res) => {
     try {
-        // Fetch all OurPartners documents from the database
-        const data = await OurPartners.find({});
+        const { category } = req.query; // Get category from query
+        const filter = category ? { Category: category } : {};
 
+        const data = await OurPartners.find(filter);
         if (!data || data.length === 0) {
             return res.status(404).json({ message: 'No partners found.' });
         }
 
         console.log(`Found ${data.length} partner entries.`);
-        
-        // Send the data as JSON response
         res.status(200).json(data);
     } catch (err) {
-        console.error('Error retrieving partner images:', err);
-        res.status(500).json({ message: 'Error retrieving partner images', error: err });
+        console.error('Error retrieving partners:', err);
+        res.status(500).json({ message: 'Error retrieving partners', error: err.message });
     }
 };
 
 module.exports = {
     OurPartnersImgUpload,
-    OurPartnersImgGet,
     OurPartnersGetImg,
-    upload // Export multer middleware for handling uploads
+    upload // Export multer instance for file uploads
 };
