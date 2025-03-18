@@ -1,58 +1,51 @@
-// /routes/eventRoutes.js
 const express = require('express');
 const multer = require('multer');
 const cloudinary = require('../../config/cloudinary');
 const Event = require('../../models/Event');
-// Import the multer config
 
 const router = express.Router();
-// const upload = multer({ dest: 'uploads/Eventphoto/' }); // Temporary upload directory
 
-
-// / Configure multer for temporary file storage
+// Multer storage configuration for temporary uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/Eventphoto/'); // Temporary upload directory
+        cb(null, 'uploads/Eventphoto/');
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`); // Unique filename
+        cb(null, `${Date.now()}-${file.originalname}`);
     }
 });
 
-const upload = multer({ storage: storage }); // Create the multer instance
-// Route to upload event data
+const upload = multer({ storage: storage });
+
+// ✅ Route to upload event data
 router.post('/addEvent', upload.single('image'), async (req, res) => {
     try {
-
-         // Check if the file was uploaded
-         if (!req.file) {
+        if (!req.file) {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
         // Upload image to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path);
 
-        // Create a new Event document
+        // Create and save new event
         const newEvent = new Event({
             eventName: req.body.eventName,
             eventDate: req.body.eventDate,
             eventTitle: req.body.eventTitle,
-            imageUrl: result.secure_url // Store the Cloudinary URL
+            imageUrl: result.secure_url
         });
 
-        // Save the new event to MongoDB
         await newEvent.save();
-
-        // Respond with success
-        console.log(newEvent)
+        console.log(newEvent);
         res.status(201).json({ message: 'Event added successfully', newEvent });
+
     } catch (error) {
         console.error('Error adding event:', error);
         res.status(500).json({ message: 'Error adding event' });
     }
 });
 
-// Route to get all events
+// ✅ Route to get all events
 router.get('/events', async (req, res) => {
     try {
         const events = await Event.find({});
@@ -63,8 +56,8 @@ router.get('/events', async (req, res) => {
     }
 });
 
-router.post('/mark-starred' , async (req,res ) =>{
-
+// ✅ Route to mark event as starred
+router.post('/mark-starred', async (req, res) => {
     try {
         const { eventId, isStarred } = req.body;
         const event = await Event.findById(eventId);
@@ -73,19 +66,19 @@ router.post('/mark-starred' , async (req,res ) =>{
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        // Update the isStarred field
         event.isStarred = isStarred;
         await event.save();
 
         res.status(200).json({ message: 'Event updated successfully', event });
+
     } catch (err) {
         console.error('Error updating event:', err);
         res.status(500).json({ message: 'Error updating event', error: err });
     }
-    
-})
+});
 
-router.get('/starred-events', async (req,res) => {
+// ✅ Route to get all starred events
+router.get('/starred-events', async (req, res) => {
     try {
         const events = await Event.find({ isStarred: true });
 
@@ -98,36 +91,37 @@ router.get('/starred-events', async (req,res) => {
         console.error('Error retrieving starred events:', err);
         res.status(500).json({ message: 'Error retrieving events', error: err });
     }
-})
+});
 
-
-
-// Route to delete an event
+// ✅ Route to delete an event
 router.delete('/deleteEvent/:id', async (req, res) => {
     try {
+        console.log("Deleting event with ID:", req.params.id); // Debugging
+
         const { id } = req.params;
         const event = await Event.findById(id);
 
         if (!event) {
+            console.log("Event not found");
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        // Delete the image from Cloudinary
-        const imageUrl = event.imageUrl;
-        const publicId = imageUrl.split('/').pop().split('.')[0]; // Extract public ID
-        await cloudinary.uploader.destroy(publicId);
+        // Extract the correct public_id from the Cloudinary URL
+        const publicIdMatch = event.imageUrl.match(/\/v\d+\/(.+)\./);
+        if (publicIdMatch && publicIdMatch[1]) {
+            await cloudinary.uploader.destroy(publicIdMatch[1]);
+        } else {
+            console.warn("Cloudinary image ID extraction failed.");
+        }
 
-        // Delete the event from MongoDB
+        // Delete event from MongoDB
         await Event.findByIdAndDelete(id);
-
         res.status(200).json({ message: 'Event deleted successfully' });
+
     } catch (error) {
         console.error('Error deleting event:', error);
         res.status(500).json({ message: 'Error deleting event' });
     }
 });
-
-
-
 
 module.exports = router;
