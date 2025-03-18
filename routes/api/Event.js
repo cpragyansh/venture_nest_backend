@@ -100,4 +100,34 @@ router.get('/starred-events', async (req,res) => {
     }
 })
 
+
+
+// Route to delete an event
+router.delete('/deleteEvent/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const event = await Event.findById(id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // Delete the image from Cloudinary
+        const imageUrl = event.imageUrl;
+        const publicId = imageUrl.split('/').pop().split('.')[0]; // Extract public ID
+        await cloudinary.uploader.destroy(publicId);
+
+        // Delete the event from MongoDB
+        await Event.findByIdAndDelete(id);
+
+        res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ message: 'Error deleting event' });
+    }
+});
+
+
+
+
 module.exports = router;
