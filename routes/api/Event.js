@@ -32,6 +32,7 @@ router.post('/addEvent', upload.single('image'), async (req, res) => {
             eventName: req.body.eventName,
             eventDate: req.body.eventDate,
             eventTitle: req.body.eventTitle,
+            eventDescription: req.body.eventDescription,
             imageUrl: result.secure_url
         });
 
