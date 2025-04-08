@@ -18,6 +18,11 @@ const IncubatedStartupSchema = new mongoose.Schema(
       enum: ["Virtual", "Physical"], // Only "Virtual" or "Physical" allowed
       required: true,
     },
+    RegistrationStatus: {
+      type: String,
+      enum: ["Private Limited", "Partnership", "Proprietorship", "Not Registered" , "DIPP No"], // Only "Virtual" or "Physical" allowed
+      required: true,
+    },
   },
   { timestamps: true }
 );

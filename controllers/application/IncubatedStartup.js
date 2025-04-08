@@ -12,6 +12,11 @@ const HandleIncubatedStartup = [
     .withMessage("StartupType is required.")
     .isIn(["Virtual", "Physical"])
     .withMessage("StartupType must be 'Virtual' or 'Physical'."),
+  body("RegistrationStatus")
+    .notEmpty()
+    .withMessage("RegistrationStatus is required.")
+    .isIn(["Private Limited", "Partnership", "Proprietorship", "Not Registered" , "DIPP No"])
+    .withMessage("RegistrationStatus must be 'Private Limited, Partnership, Proprietorship, Not Registered , DIPP No ' "),
 
   async (req, res) => {
     try {
@@ -29,6 +34,7 @@ const HandleIncubatedStartup = [
         FundingRaisedStartup,
         InvestmentByIncubator,
         StartupType,
+        RegistrationStatus
       } = req.body;
 
       const existingStartup = await IncubatedStartup.findOne({
@@ -50,6 +56,7 @@ const HandleIncubatedStartup = [
         FundingRaisedStartup,
         InvestmentByIncubator,
         StartupType,
+        RegistrationStatus
       });
 
       await newStartup.save();
