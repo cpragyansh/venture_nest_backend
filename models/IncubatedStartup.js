@@ -5,7 +5,6 @@ const IncubatedStartupSchema = new mongoose.Schema(
     StartupName: { type: String, required: true },
     CIN: {
       type: String,
-      required: true,
       match: /^[a-zA-Z0-9]+$/, // Allows letters and numbers
     },
     FounderName: { type: String, required: true },

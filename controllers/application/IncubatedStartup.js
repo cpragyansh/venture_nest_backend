@@ -38,7 +38,7 @@ const HandleIncubatedStartup = [
       } = req.body;
 
       const existingStartup = await IncubatedStartup.findOne({
-        $or: [{ StartupName }, { CIN }],
+        $or: [{ StartupName }],
       });
 
       if (existingStartup) {
