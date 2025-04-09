@@ -66,6 +66,8 @@ app.use('/', require('./routes/api/photo'));
 app.use('/', require('./routes/api/Latestnews'));
 app.use('/', require('./routes/api/gov_partners'));
 app.use('/', require('./routes/api/councilRoutes'));
+app.use('/api/team', require('./routes/api/memberRoutes'));
+
 
 app.get("/api/health", (req, res) => {
     res.json({ status: "Server is running", timestamp: new Date() });
