@@ -6,7 +6,7 @@ const streamifier = require('streamifier');
 // Allowed categories for council members
 // const allowedCouncilCategories = ['advisory', 'techinnov', 'mentorship', 'legalcompl'];
 // Allowed categories for council members
-const allowedCouncilCategories = ['advisory', 'techinnov', 'mentorship', 'legalcompl', 'investFund'];
+const allowedCouncilCategories = ['advisory', 'techinnov', 'mentorship', 'legalcompl', 'investfund'];
 
 
 // Multer config (store file in memory)
