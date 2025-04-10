@@ -1512,3 +1512,12 @@
 20250409	15:52:52	42d6ea61-f507-403e-bdaf-467583476495	DELETE	http://localhost:3001	/api/team/67f64a546945751e26fb6d76
 20250409	15:52:52	9580fbee-0ad1-4e84-aa7a-6734f171e0fa	GET	http://localhost:3001	/api/team
 20250409	15:52:56	eff36b9f-b0f3-4155-89b0-1e5d7fc7ba6f	GET	http://localhost:3000	/api/team
+20250409	15:55:18	6323f203-a06b-4f9a-a6a2-2aa069f1a918	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:01:13	62e7459d-ed6b-441b-bad6-4570ce046f87	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:01:45	e2ecbafc-8556-4ea3-84be-d97c008045e8	POST	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:01:49	573c2310-6f01-4015-a449-6c27f57117de	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:02:37	f6434150-1658-4f5a-b126-782bca550a42	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:02:39	1c34cabe-37ed-4503-8e1e-a6f2bc240c1e	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:02:40	53e8ec70-21db-4bd9-b4c3-8c59168c0351	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:02:41	4e045f5d-c4f1-4990-9ee2-dee90579e96f	GET	https://ventureadmin-c530a.web.app	/api/team
+20250409	16:02:41	4d68e88b-4697-4260-a3dd-b590ed14b527	GET	https://ventureadmin-c530a.web.app	/api/team

@@ -4,7 +4,10 @@ const multer = require('multer');
 const streamifier = require('streamifier');
 
 // Allowed categories for council members
+// const allowedCouncilCategories = ['advisory', 'techinnov', 'mentorship', 'legalcompl'];
+// Allowed categories for council members
 const allowedCouncilCategories = ['advisory', 'techinnov', 'mentorship', 'legalcompl', 'investFund'];
+
 
 // Multer config (store file in memory)
 const upload = multer({ storage: multer.memoryStorage() });
