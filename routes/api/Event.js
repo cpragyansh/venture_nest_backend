@@ -124,5 +124,17 @@ router.delete('/deleteEvent/:id', async (req, res) => {
         res.status(500).json({ message: 'Error deleting event' });
     }
 });
+// ✅ Route to update an event
+router.put('/updateEvent/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });
+        res.status(200).json({ message: 'Event updated successfully', updatedEvent });
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).json({ message: 'Error updating event' });
+    }
+});
+
 
 module.exports = router;
