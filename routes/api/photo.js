@@ -60,5 +60,35 @@ router.get('/photos', async (req, res) => {
         res.status(500).json({ message: 'Error fetching events' });
     }
 });
+// UPDATE Photo
+router.put('/photos/:id', upload.single('image'), async (req, res) => {
+    try {
+        const { photoName, photoDate } = req.body;
+        let updatedData = { photoName, photoDate };
+
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            updatedData.imageUrl = result.secure_url;
+        }
+
+        const updatedPhoto = await Photo.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+        res.status(200).json(updatedPhoto);
+    } catch (error) {
+        console.error('Error updating photo:', error);
+        res.status(500).json({ message: 'Error updating photo' });
+    }
+});
+
+// DELETE Photo
+router.delete('/photos/:id', async (req, res) => {
+    try {
+        await Photo.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: "Photo deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting photo:", error);
+        res.status(500).json({ message: "Error deleting photo" });
+    }
+});
+
 
 module.exports = router;
