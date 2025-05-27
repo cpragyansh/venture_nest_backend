@@ -9,6 +9,8 @@ const Logger = require('./middleware/logger');
 const { stack } = require('./routes/api/HeroSecation');
 const path = require('path')
 const Event = require('./routes/api/Event');
+const Program = require('./routes/api/program');
+
 
 // Connect to the database
 dbconnect.connect()
@@ -62,6 +64,7 @@ app.use('/', require('./routes/api/SuccessStories'));
 app.use('/', require('./routes/api/IncubatedStartup'));
 app.use('/', require('./routes/api/PatentsFiled'));
 app.use('/', require('./routes/api/Event'));
+app.use('/', require('./routes/api/program'));
 app.use('/', require('./routes/api/photo'));
 app.use('/', require('./routes/api/Latestnews'));
 app.use('/', require('./routes/api/gov_partners'));
