@@ -21,6 +21,15 @@ router.get('/getsuccess', FounderImgGet);
 router.post('/success-mark-starred' , markStarredStory);
 router.get('/starred-stories' , StarredStory);
 
+router.delete('/successstory/:id', async (req, res) => {
+    try {
+        const story = await SuccessStories.findByIdAndDelete(req.params.id);
+        if (!story) return res.status(404).json({ message: 'Story not found' });
+        res.status(200).json({ message: 'Deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting story', error: err });
+    }
+});
 
 
 module.exports = router;
