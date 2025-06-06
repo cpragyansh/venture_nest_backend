@@ -6,7 +6,9 @@ const allowedOrigins = [
     'http://localhost:3002', // Local development
     'http://localhost:5173', // Local development
     'https://venturenest-a9a81.firebaseapp.com', // Production domain,
-    "https://ventureadmin-c530a.web.app"
+    "https://ventureadmin-c530a.web.app",
+    "https://venture-e1ef7.web.app".
+    
 ];
 
 module.exports = allowedOrigins;
