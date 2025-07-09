@@ -6,21 +6,23 @@ const {
     FounderImgGet,
     upload,
     markStarredStory,
-    StarredStory
+    StarredStory,
+    updateSuccessStory
 } = require('../../controllers/application/SuccessStories');
+const SuccessStories = require('../../models/SuccessStories');
 
-// POST request to upload founder's image, startup name, and startup description
-router.post('/successstory', upload.single('FounderImg'), FounderDetUpload);
+// CREATE (with two image fields)
+router.post('/successstory', upload, FounderDetUpload);
 
-// GET request to retrieve a founder's image by filename
-router.get('/successstory/:filename', FounderImgGetfromserver);
-
-// GET request to retrieve all success stories from the database
+// READ
 router.get('/getsuccess', FounderImgGet);
+router.get('/successstory/:filename', FounderImgGetfromserver);
+router.get('/starred-stories', StarredStory);
 
-router.post('/success-mark-starred' , markStarredStory);
-router.get('/starred-stories' , StarredStory);
+// UPDATE
+router.put('/successstory/:id', upload, updateSuccessStory);
 
+// DELETE
 router.delete('/successstory/:id', async (req, res) => {
     try {
         const story = await SuccessStories.findByIdAndDelete(req.params.id);
@@ -31,5 +33,7 @@ router.delete('/successstory/:id', async (req, res) => {
     }
 });
 
+// STAR / UNSTAR
+router.post('/success-mark-starred', markStarredStory);
 
 module.exports = router;

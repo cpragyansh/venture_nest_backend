@@ -14,36 +14,44 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+// In controller file
+const upload = multer({ storage: storage }).fields([
+  { name: 'FounderImg', maxCount: 1 },
+  { name: 'FounderLogoImg', maxCount: 1 }
+]);
+
 
 // Function to handle image, name, and description upload for SuccessStories
 const FounderDetUpload = async (req, res) => {
     try {
-        // Check if required fields are provided
-        if (!req.body.StartupName || !req.body.StartupAbout || !req.file) {
-            return res.status(400).send('Startup Name, About, and Founder Image are all required.');
-        }
-        const result = await cloudinary.uploader.upload(req.file.path)
+        const { StartupName, StartupAbout } = req.body;
+        const files = req.files;
 
-        // Create a new SuccessStories document with the uploaded data
+        if (!StartupName || !StartupAbout || !files.FounderImg || !files.FounderLogoImg) {
+            return res.status(400).send('All fields are required: StartupName, About, FounderImg, FounderLogoImg.');
+        }
+
+        // Upload both images to Cloudinary
+        const founderImgResult = await cloudinary.uploader.upload(files.FounderImg[0].path);
+        const founderLogoImgResult = await cloudinary.uploader.upload(files.FounderLogoImg[0].path);
+
         const newStory = new SuccessStories({
-            StartupName: req.body.StartupName,
-            StartupAbout: req.body.StartupAbout,
-            FounderImg: result.secure_url, // Save the image path
-            FounderImgName: req.file.filename
-            // Save the image filename
+            StartupName,
+            StartupAbout,
+            FounderImg: founderImgResult.secure_url,
+            FounderImgName: files.FounderImg[0].filename,
+            FounderLogoImg: founderLogoImgResult.secure_url
         });
 
-        // Save the new document to MongoDB
         await newStory.save();
 
-        console.log('New success story saved:', newStory);
         res.status(200).send('Success Story saved successfully!');
     } catch (err) {
         console.error('Error saving success story:', err);
         res.status(500).send('Error saving success story: ' + err);
     }
 };
+
 
 // Function to get an image by filename from the 'uploads' folder
 const FounderImgGetfromserver = (req, res) => {
@@ -122,11 +130,47 @@ const StarredStory = async (req, res) => {
         res.status(500).json({ message: 'Error retrieving starred stories', error: error });
     }
 }
+
+const updateSuccessStory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const files = req.files;
+        const updateData = req.body;
+
+        // Check if the story exists
+        const story = await SuccessStories.findById(id);
+        if (!story) return res.status(404).json({ message: 'Story not found' });
+
+        // Upload new FounderImg if provided
+        if (files?.FounderImg) {
+            const result = await cloudinary.uploader.upload(files.FounderImg[0].path);
+            updateData.FounderImg = result.secure_url;
+            updateData.FounderImgName = files.FounderImg[0].filename;
+        }
+
+        // Upload new FounderLogoImg if provided
+        if (files?.FounderLogoImg) {
+            const result = await cloudinary.uploader.upload(files.FounderLogoImg[0].path);
+            updateData.FounderLogoImg = result.secure_url;
+        }
+
+        const updatedStory = await SuccessStories.findByIdAndUpdate(id, updateData, { new: true });
+
+        res.status(200).json({ message: 'Updated successfully', updatedStory });
+    } catch (err) {
+        console.error('Error updating story:', err);
+        res.status(500).json({ message: 'Error updating story', error: err });
+    }
+};
+
 module.exports = {
     FounderDetUpload,
     FounderImgGet,
     FounderImgGetfromserver,
     StarredStory,
     markStarredStory,
+    
+    updateSuccessStory
+    ,
     upload // Export multer middleware for handling uploads
 };
