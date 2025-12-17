@@ -28,6 +28,8 @@ const eventSchema = new mongoose.Schema({
         type: Boolean,
         default: false // By default, events are not starred
     }
+    ,
+     order: Number, // <== Add this
 });
 
 // Create and export the Event model

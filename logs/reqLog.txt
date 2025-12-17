@@ -1547,3 +1547,11 @@
 20250710	01:34:06	786f2aed-1787-47d5-a32b-d7d39e0eeed5	GET	http://localhost:3000	/getsuccess
 20250710	01:41:31	598939c2-f28f-4f12-a540-0eecd0162025	PUT	http://localhost:3000	/successstory/684bc17af42159ac832aca32
 20250710	01:41:32	b5374276-607e-4700-9c90-9e570fcbeaca	GET	http://localhost:3000	/getsuccess
+20250820	16:16:57	a473ad9d-fb6b-4326-afbd-cfff84d81b0f	GET	http://localhost:3000	/council-members?category=advisory
+20250820	16:17:00	a1a03565-9a30-404d-90e6-bbf0100f4381	GET	http://localhost:3000	/council-members?category=advisory
+20250820	16:17:10	a1ede51b-f88c-4539-bff8-feb3239a01d3	GET	http://localhost:3000	/council-members?category=advisory
+20250820	16:17:20	69682be4-1b0c-4441-924f-1fb0cf45b4e3	GET	undefined	/council-members?category=advisory
+20250820	16:17:35	8a7a6e64-991a-42d6-b95b-b70c15a05cf6	GET	undefined	/council-members?category=advisory
+20250820	16:18:10	a8601552-2082-4015-90b1-4bb57694e3e4	GET	undefined	/council-members?category=advisory
+20251217	21:15:29	ff34b29e-d55a-4a9c-b306-5117dfaeeda1	GET	undefined	/starred-stories/68382037906d469697a42ef7
+20251217	21:15:29	f0d994ef-c141-4516-b413-d13ea432afad	GET	undefined	/favicon.ico

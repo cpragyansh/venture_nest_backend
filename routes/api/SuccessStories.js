@@ -35,5 +35,25 @@ router.delete('/successstory/:id', async (req, res) => {
 
 // STAR / UNSTAR
 router.post('/success-mark-starred', markStarredStory);
+// READ SINGLE STARRED STORY BY ID (DETAIL PAGE)
+router.get('/starred-stories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const story = await SuccessStories.findById(id);
+
+        if (!story) {
+            return res.status(404).json({ message: 'Story not found' });
+        }
+
+        res.status(200).json(story);
+    } catch (error) {
+        res.status(500).json({
+            message: 'Error fetching story details',
+            error: error.message
+        });
+    }
+});
+
 
 module.exports = router;
