@@ -17,32 +17,42 @@ const storage = multer.diskStorage({
 // In controller file
 const upload = multer({ storage: storage }).fields([
   { name: 'FounderImg', maxCount: 1 },
-  { name: 'FounderLogoImg', maxCount: 1 }
+  { name: 'FounderLogoImg', maxCount: 1 },
+  {name: 'SuccessImages',maxCount:6},
 ]);
 
 
 // Function to handle image, name, and description upload for SuccessStories
 const FounderDetUpload = async (req, res) => {
     try {
-        const { StartupName, StartupAbout } = req.body;
+        const { StartupName, StartupAbout,StartupDescription , StartupWebsite , StartupLinkdin } = req.body;
         const files = req.files;
 
-        if (!StartupName || !StartupAbout || !files.FounderImg || !files.FounderLogoImg) {
+        if (!StartupName || !StartupAbout || !files.FounderImg || !files.FounderLogoImg || !StartupDescription || !StartupLinkdin || !files?.SuccessImages) {
             return res.status(400).send('All fields are required: StartupName, About, FounderImg, FounderLogoImg.');
         }
 
         // Upload both images to Cloudinary
         const founderImgResult = await cloudinary.uploader.upload(files.FounderImg[0].path);
         const founderLogoImgResult = await cloudinary.uploader.upload(files.FounderLogoImg[0].path);
+       // ✅ Upload Success Images (ARRAY)
+    const successImages = [];
+    for (const file of files.SuccessImages) {
+      const result = await cloudinary.uploader.upload(file.path);
+      successImages.push(result.secure_url);
+    }
 
-        const newStory = new SuccessStories({
-            StartupName,
-            StartupAbout,
-            FounderImg: founderImgResult.secure_url,
-            FounderImgName: files.FounderImg[0].filename,
-            FounderLogoImg: founderLogoImgResult.secure_url
-        });
-
+      const newStory = new SuccessStories({
+      StartupName,
+      StartupAbout,
+      StartupDescription,
+      FounderImg: founderImgResult.secure_url,
+      FounderImgName: files.FounderImg[0].filename,
+      FounderLogoImg: founderLogoImgResult.secure_url,
+      SuccessImages: successImages,
+      StartupWebsite,
+      StartupLinkdin
+    });
         await newStory.save();
 
         res.status(200).send('Success Story saved successfully!');
@@ -153,6 +163,16 @@ const updateSuccessStory = async (req, res) => {
             const result = await cloudinary.uploader.upload(files.FounderLogoImg[0].path);
             updateData.FounderLogoImg = result.secure_url;
         }
+
+// Append new SuccessImages
+    if (files?.SuccessImages) {
+      const newImages = [];
+      for (const file of files.SuccessImages) {
+        const result = await cloudinary.uploader.upload(file.path);
+        newImages.push(result.secure_url);
+      }
+      updateData.$push = { SuccessImages: { $each: newImages } };
+    }
 
         const updatedStory = await SuccessStories.findByIdAndUpdate(id, updateData, { new: true });
 
