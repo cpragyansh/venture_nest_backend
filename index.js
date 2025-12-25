@@ -10,6 +10,7 @@ const { stack } = require('./routes/api/HeroSecation');
 const path = require('path')
 const Event = require('./routes/api/Event');
 const Program = require('./routes/api/program');
+const Project = require('./routes/api/Project.routes');
 
 
 // Connect to the database
@@ -69,6 +70,8 @@ app.use('/', require('./routes/api/photo'));
 app.use('/', require('./routes/api/Latestnews'));
 app.use('/', require('./routes/api/gov_partners'));
 app.use('/', require('./routes/api/councilRoutes'));
+app.use('/', require('./routes/api/Project.routes'));
+app.use('/', require('./routes/api/Mentors.routes'));
 app.use('/api/team', require('./routes/api/memberRoutes'));
 
 
