@@ -22,14 +22,21 @@ const eventSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         required: true
-    }
-    ,
+    },
+
+    EventImages: [
+        {
+            type: String,
+            required: false,
+        }
+    ],
+
     isStarred: {
         type: Boolean,
         default: false // By default, events are not starred
     }
     ,
-     order: Number, // <== Add this
+    order: Number, // <== Add this
 });
 
 // Create and export the Event model

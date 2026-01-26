@@ -2,7 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const cloudinary = require('../../config/cloudinary');
 const Event = require('../../models/Event');
-
+const path = require('path');
+const fs = require('fs');
 const router = express.Router();
 
 // Multer storage configuration for temporary uploads
@@ -11,21 +12,50 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/Eventphoto/');
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
 });
 
-const upload = multer({ storage: storage });
+// Configure multer to accept both single main image and multiple event images
+// Supports multiple field name variations for flexibility
+const upload = multer({ storage: storage }).fields([
+    { name: 'imageUrl', maxCount: 1 },      // Main event image (preferred)
+    { name: 'image', maxCount: 1 },         // Alternative field name for main image
+    { name: 'EventImages', maxCount: 6 },   // Additional event images (preferred)
+    { name: 'images', maxCount: 6 }         // Alternative field name for gallery images
+]);
 
-// ✅ Route to upload event data
-router.post('/addEvent', upload.single('image'), async (req, res) => {
+// ✅ Route to upload event data with multiple images
+router.post('/addEvent', upload, async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
+        console.log('📥 Received files:', req.files);
+        console.log('📝 Received body:', req.body);
+
+        // Check for main image (support both 'imageUrl' and 'image' field names)
+        const mainImageFile = req.files?.imageUrl?.[0] || req.files?.image?.[0];
+
+        if (!mainImageFile) {
+            return res.status(400).json({
+                message: 'Main image is required',
+                receivedFields: req.files ? Object.keys(req.files) : [],
+                hint: 'Send main image as "imageUrl" or "image" field'
+            });
         }
 
-        // Upload image to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path);
+        // Upload main image to Cloudinary
+        const mainImageResult = await cloudinary.uploader.upload(mainImageFile.path);
+
+        // Upload additional event images (support both 'EventImages' and 'images' field names)
+        let eventImageUrls = [];
+        const galleryFiles = req.files?.EventImages || req.files?.images || [];
+
+        if (galleryFiles.length > 0) {
+            const eventImageUploadPromises = galleryFiles.map(file =>
+                cloudinary.uploader.upload(file.path)
+            );
+            const eventImageResults = await Promise.all(eventImageUploadPromises);
+            eventImageUrls = eventImageResults.map(result => result.secure_url);
+        }
 
         // Create and save new event
         const newEvent = new Event({
@@ -33,16 +63,20 @@ router.post('/addEvent', upload.single('image'), async (req, res) => {
             eventDate: req.body.eventDate,
             eventTitle: req.body.eventTitle,
             eventDescription: req.body.eventDescription,
-            imageUrl: result.secure_url
+            imageUrl: mainImageResult.secure_url,
+            EventImages: eventImageUrls
         });
 
         await newEvent.save();
-        console.log(newEvent);
+        console.log('✅ Event created:', newEvent);
         res.status(201).json({ message: 'Event added successfully', newEvent });
 
     } catch (error) {
-        console.error('Error adding event:', error);
-        res.status(500).json({ message: 'Error adding event' });
+        console.error('❌ Error adding event:', error);
+        res.status(500).json({
+            message: 'Error adding event',
+            error: error.message
+        });
     }
 });
 
@@ -107,12 +141,26 @@ router.delete('/deleteEvent/:id', async (req, res) => {
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        // Extract the correct public_id from the Cloudinary URL
+        // Delete main image from Cloudinary
         const publicIdMatch = event.imageUrl.match(/\/v\d+\/(.+)\./);
         if (publicIdMatch && publicIdMatch[1]) {
             await cloudinary.uploader.destroy(publicIdMatch[1]);
         } else {
-            console.warn("Cloudinary image ID extraction failed.");
+            console.warn("Cloudinary main image ID extraction failed.");
+        }
+
+        // Delete all EventImages from Cloudinary
+        if (event.EventImages && event.EventImages.length > 0) {
+            const deletePromises = event.EventImages.map(imageUrl => {
+                const publicIdMatch = imageUrl.match(/\/v\d+\/(.+)\./);
+                if (publicIdMatch && publicIdMatch[1]) {
+                    return cloudinary.uploader.destroy(publicIdMatch[1]);
+                } else {
+                    console.warn("Cloudinary event image ID extraction failed for:", imageUrl);
+                    return Promise.resolve();
+                }
+            });
+            await Promise.all(deletePromises);
         }
 
         // Delete event from MongoDB

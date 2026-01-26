@@ -1569,3 +1569,12 @@
 20251226	01:56:28	ec9aef87-182e-44e2-b1a8-070e4caa0250	POST	undefined	/mentor
 20251226	01:56:50	6900eac7-42cf-4e99-9ad5-7828e99d3b6a	POST	undefined	/mentor
 20251226	01:57:10	8b9b3578-efdd-4291-b72d-0b4f05033bcd	GET	undefined	/mentors
+20260126	16:17:14	d08f812f-d19d-4fa1-b115-56ff895d3540	GET	undefined	/api/addEvent
+20260126	16:17:19	e8fcf3db-005a-4dd1-84fd-649351027789	POST	undefined	/api/addEvent
+20260126	16:19:39	a3a78d80-8a37-4a7a-b6a2-5b32f374d15f	POST	undefined	/api/addEvent
+20260126	16:20:11	557d5d47-1f6b-4225-978d-9068783064b3	POST	undefined	/addEvent
+20260126	16:33:17	dc5cf866-ff6a-4481-83d2-db01b0c46f84	POST	http://localhost:3000	/addEvent
+20260126	16:34:40	fd4c3523-6f70-46c1-81cb-29ea2dfa5475	POST	http://localhost:3000	/addEvent
+20260126	16:36:20	304dd1cf-d9ed-4aac-9137-61cd6315eca2	POST	http://localhost:3000	/addEvent
+20260126	16:40:52	b642f78e-d57f-440f-b84a-89cf1f8ccf88	POST	http://localhost:3000	/addEvent
+20260126	16:42:39	84bfa83d-8de9-4a91-87dc-9b149401bb3b	POST	http://localhost:3000	/addEvent
