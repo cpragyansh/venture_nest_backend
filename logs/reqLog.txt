@@ -1578,3 +1578,8 @@
 20260126	16:36:20	304dd1cf-d9ed-4aac-9137-61cd6315eca2	POST	http://localhost:3000	/addEvent
 20260126	16:40:52	b642f78e-d57f-440f-b84a-89cf1f8ccf88	POST	http://localhost:3000	/addEvent
 20260126	16:42:39	84bfa83d-8de9-4a91-87dc-9b149401bb3b	POST	http://localhost:3000	/addEvent
+20260126	17:36:29	2183f740-f8c4-4a9a-9d32-06a38a14506a	GET	http://localhost:3000	/events
+20260126	17:36:43	881d6423-a552-4062-afa8-7d241b682f8e	PUT	http://localhost:3000	/updateEvent/69775460f916776860fca81b
+20260126	17:36:52	0d961211-cdd4-4578-8531-8843700c5c26	GET	http://localhost:3000	/events
+20260126	17:37:16	8454bb60-5dc3-4656-a94f-23d65853b4a5	PUT	http://localhost:3000	/updateEvent/69775460f916776860fca81b
+20260126	17:37:22	33dddf46-f934-4ee6-9e98-338a5979f206	GET	http://localhost:3000	/events

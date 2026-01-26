@@ -172,15 +172,100 @@ router.delete('/deleteEvent/:id', async (req, res) => {
         res.status(500).json({ message: 'Error deleting event' });
     }
 });
-// ✅ Route to update an event
-router.put('/updateEvent/:id', async (req, res) => {
+// ✅ Route to update an event (supports text, image replacement, adding/removing images)
+router.put('/updateEvent/:id', upload, async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });
-        res.status(200).json({ message: 'Event updated successfully', updatedEvent });
+        let event = await Event.findById(id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // 1. Handle Text Updates
+        // Update basic fields if they exist in req.body
+        const updateFields = ['eventName', 'eventDate', 'eventTitle', 'eventDescription', 'isStarred', 'order'];
+        updateFields.forEach(field => {
+            if (req.body[field] !== undefined) {
+                event[field] = req.body[field];
+            }
+        });
+
+        // 2. Handle Main Image Update (Replace)
+        // Checks for 'imageUrl' or 'image' field
+        const mainImageFile = req.files?.imageUrl?.[0] || req.files?.image?.[0];
+        if (mainImageFile) {
+            // Delete old main image from Cloudinary
+            if (event.imageUrl) {
+                const oldPublicId = event.imageUrl.match(/\/v\d+\/(.+)\./)?.[1];
+                if (oldPublicId) {
+                    await cloudinary.uploader.destroy(oldPublicId);
+                }
+            }
+
+            // Upload new main image
+            const result = await cloudinary.uploader.upload(mainImageFile.path);
+            event.imageUrl = result.secure_url;
+        }
+
+        // 3. Handle Gallery Images (Append new ones)
+        // Checks for 'EventImages' or 'images' fields
+        const galleryFiles = req.files?.EventImages || req.files?.images || [];
+        if (galleryFiles.length > 0) {
+            const uploadPromises = galleryFiles.map(file => cloudinary.uploader.upload(file.path));
+            const results = await Promise.all(uploadPromises);
+            const newUrls = results.map(r => r.secure_url);
+
+            // Initialize array if it doesn't exist
+            if (!event.EventImages) event.EventImages = [];
+            event.EventImages.push(...newUrls);
+        }
+
+        // 4. Handle Deleting Specific Gallery Images
+        // Expecting 'deletedEventImages' in body (can be JSON string or single URL string/array)
+        if (req.body.deletedEventImages) {
+            let imagesToDelete = req.body.deletedEventImages;
+
+            // Parse if it's a JSON string
+            if (typeof imagesToDelete === 'string') {
+                try {
+                    // Try parsing as JSON array
+                    if (imagesToDelete.startsWith('[')) {
+                        imagesToDelete = JSON.parse(imagesToDelete);
+                    } else {
+                        // Treat as single URL string
+                        imagesToDelete = [imagesToDelete];
+                    }
+                } catch (e) {
+                    // Fallback: treat as single item array
+                    imagesToDelete = [imagesToDelete];
+                }
+            }
+
+            // Ensure it is an array before processing
+            if (Array.isArray(imagesToDelete)) {
+                // Remove from Cloudinary
+                const deletePromises = imagesToDelete.map(url => {
+                    const publicIdMatch = url.match(/\/v\d+\/(.+)\./);
+                    if (publicIdMatch && publicIdMatch[1]) {
+                        return cloudinary.uploader.destroy(publicIdMatch[1]);
+                    }
+                    return Promise.resolve();
+                });
+                await Promise.all(deletePromises);
+
+                // Remove from DB (filter out deleted URLs)
+                event.EventImages = event.EventImages.filter(url => !imagesToDelete.includes(url));
+            }
+        }
+
+        await event.save();
+        console.log('✅ Event updated:', event._id);
+        res.status(200).json({ message: 'Event updated successfully', updatedEvent: event });
+
     } catch (error) {
-        console.error('Error updating event:', error);
-        res.status(500).json({ message: 'Error updating event' });
+        console.error('❌ Error updating event:', error);
+        res.status(500).json({ message: 'Error updating event', error: error.message });
     }
 });
 
