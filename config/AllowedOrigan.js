@@ -8,6 +8,8 @@ const allowedOrigins = [
     'https://venturenest-a9a81.firebaseapp.com', // Production domain,
     "https://ventureadmin-c530a.web.app",
     "https://venture-e1ef7.web.app",
+    "https://venturenest.cgcuniversity.in",
+
     
 ];
 
