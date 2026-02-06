@@ -9,6 +9,8 @@ const allowedOrigins = [
     "https://ventureadmin-c530a.web.app",
     "https://venture-e1ef7.web.app",
     "https://venturenest.cgcuniversity.in",
+    "https://cortexbackend.inditech.in",
+    "https://cortex.inditech.in",
 
     
 ];
